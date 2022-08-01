@@ -51,10 +51,19 @@ func main() {
 // converts a string representation of a number into a Big.Int
 // @see math/big
 func MakeBigInt(val string) *big.Int {
-	i, success := new(big.Int).SetString(val, 10)
+
+	isHex := strings.ContainsAny(strings.ToLower(val), "abcdef")
+
+	var base int = 10 // decimal base
+	if isHex {
+		base = 16 // hexadecimal
+	}
+
+	//fmt.Println("for %v isHex is %v, so base=%v \n", val, isHex, base)
+	i, success := new(big.Int).SetString(val, base)
 
 	if !success {
-		panic("Failed to create BigInt from string")
+		panic(fmt.Sprintf("Failed to create BigInt from %v", val))
 	}
 
 	return i
